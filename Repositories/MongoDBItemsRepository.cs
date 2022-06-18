@@ -5,17 +5,20 @@ namespace Catalog_Web_API.Repositories
 {
     public class MongoDBItemsRepository : IInMemItemsRepository
     {
+        private const string databaseName = "catalog";
+        private const string collectionName = "items";
         private readonly IMongoCollection<Item> itemsCollection;
-        // Still need the collection name and the database name to group everything into a collection
 
         public MongoDBItemsRepository(IMongoClient mongoClient)
         {
-
+            // Both the collection and the database will be created by MongoDB Driver the first time they are needed
+            IMongoDatabase database = mongoClient.GetDatabase(databaseName);
+            itemsCollection = database.GetCollection<Item>(collectionName);
         }
-
+        // To visualize the MongoDB database, we will run it in a Docker container 
         public void CreateItem(Item item)
         {
-            throw new NotImplementedException();
+            itemsCollection.InsertOne(item);
         }
 
         public void DeleteItem(Guid id)
