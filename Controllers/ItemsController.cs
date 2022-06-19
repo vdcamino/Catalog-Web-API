@@ -68,11 +68,10 @@ namespace Catalog_Web_API.Controllers
                 return NotFound();
             }
 
-            Item updatedItem = existingItem with
-            {
-                Name = itemDTO.Name,
-                Price = itemDTO.Price
-            };
+            Item updatedItem = existingItem;
+
+            existingItem.Name = itemDTO.Name;
+            existingItem.Price = itemDTO.Price;
 
             repository.UpdateItem(updatedItem);
 
