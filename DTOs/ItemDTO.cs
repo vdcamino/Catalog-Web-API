@@ -1,6 +1,6 @@
 ﻿namespace Catalog_Web_API.DTOs
 {
-    public record ItemDTO
+    public class ItemDTO
     {
         public Guid Id { get; set; }
         public string? Name { get; set; }

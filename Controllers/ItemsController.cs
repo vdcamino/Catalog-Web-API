@@ -18,18 +18,19 @@ namespace Catalog_Web_API.Controllers
 
         // GET /items
         [HttpGet]
-        public IEnumerable<ItemDTO> GetItems()
+        public async Task<IEnumerable<ItemDTO>> GetItemsAsync()
         {
-            var items = repository.GetItems().Select(item => item.AsDTO());
+            var items = (await repository.GetItemsAsync())  // Parenthesis make the select action to be performed only after GetItemsAsync
+                        .Select(item => item.AsDTO());
 
             return items;
         }
         
         // GET /items/{id}
         [HttpGet("{Id}")]
-        public ActionResult<ItemDTO> GetItem(Guid Id)
+        public async Task <ActionResult<ItemDTO>> GetItemAsync(Guid Id)
         {
-            var item = repository.GetItem(Id);
+            var item = await repository.GetItemAsync(Id);
 
             if (item is null)
             {
@@ -41,7 +42,7 @@ namespace Catalog_Web_API.Controllers
 
         // POST /items
         [HttpPost]
-        public ActionResult<ItemDTO> CreateItem(CreateItemDTO itemDTO)
+        public async Task<ActionResult<ItemDTO>> CreateItem(CreateItemDTO itemDTO)
         {
             Item item = new()
             {
@@ -52,17 +53,17 @@ namespace Catalog_Web_API.Controllers
             };
 
 
-            repository.CreateItem(item);
+            await repository.CreateItemAsync(item);
 
-            return CreatedAtAction(nameof(GetItem), new { id = item.Id }, item.AsDTO());
+            return CreatedAtAction(nameof(GetItemAsync), new { id = item.Id }, item.AsDTO());
             
         }
 
         // PUT /items/id
         [HttpPut]
-        public ActionResult UpdateItem(Guid id, UpdateItemDTO itemDTO)
+        public async Task<ActionResult> UpdateItem(Guid id, UpdateItemDTO itemDTO)
         {
-            var existingItem = repository.GetItem(id);
+            var existingItem = await repository.GetItemAsync(id);
             if (existingItem is null)
             {
                 return NotFound();
@@ -73,22 +74,22 @@ namespace Catalog_Web_API.Controllers
             existingItem.Name = itemDTO.Name;
             existingItem.Price = itemDTO.Price;
 
-            repository.UpdateItem(updatedItem);
+            await repository.UpdateItemAsync(updatedItem);
 
             return NoContent();
         }
 
         // DELETE /items/id
         [HttpDelete("{id}")]
-        public ActionResult DeleteItem(Guid id)
+        public async Task<ActionResult> DeleteItem(Guid id)
         {
-            var existingItem = repository.GetItem(id);
+            var existingItem = await repository.GetItemAsync(id);
             if (existingItem is null)
             {
                 return NotFound();
             }
 
-            repository.DeleteItem(id);
+            await repository.DeleteItemAsync(id);
 
             return NoContent();
         }

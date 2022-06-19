@@ -2,7 +2,7 @@
 
 namespace Catalog_Web_API.DTOs
 {
-    public record DeleteItemDTO
+    public class DeleteItemDTO
     {
         [Required]
         public Guid Id { get; set; }

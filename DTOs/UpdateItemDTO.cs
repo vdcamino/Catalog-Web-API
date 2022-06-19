@@ -2,7 +2,7 @@
 
 namespace Catalog_Web_API.DTOs
 {
-    public record UpdateItemDTO
+    public class UpdateItemDTO
     {
         [Required]
         public string Name { get; set; }
