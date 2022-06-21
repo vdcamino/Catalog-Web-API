@@ -60,7 +60,7 @@ namespace Catalog_Web_API.Controllers
         }
 
         // PUT /items/id
-        [HttpPut]
+        [HttpPut("{Id}")]
         public async Task<ActionResult> UpdateItem(Guid id, UpdateItemDTO itemDTO)
         {
             var existingItem = await repository.GetItemAsync(id);
