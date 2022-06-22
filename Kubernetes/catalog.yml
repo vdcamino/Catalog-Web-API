@@ -1,0 +1,22 @@
+﻿apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: catalog-deployment
+  name: catalog-deployment
+spec:
+  selector:
+    matchLabels:
+      app: catalog-web-api
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: catalog-web-api
+    spec:
+      containers:
+      - image: victordacamino/catalog:v1
+        name: catalog
+        resources: {}
+status: {}
