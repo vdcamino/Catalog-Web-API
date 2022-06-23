@@ -11,12 +11,43 @@ spec:
       app: catalog-web-api
   template:
     metadata:
-      creationTimestamp: null
       labels:
         app: catalog-web-api
     spec:
       containers:
       - image: victordacamino/catalog:v1
         name: catalog
-        resources: {}
-status: {}
+        resources:
+          limits: 
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+          - containerPort: 80
+        env:
+          - name: MongoDBSettings__Host
+            value: mongodb-service
+          - name: MongoDBSettings__Pwd
+            secreteKeyRef:
+              name: catalog-secrets
+              key: mongodb-password
+        livenessProbe:
+          httpGet:
+            path: /health/live
+            port: 80
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: catalog-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: catalog-web-api
+  ports:
+    - port: 80
+      targetPort: 80
