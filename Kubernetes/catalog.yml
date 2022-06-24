@@ -1,9 +1,6 @@
 ﻿apiVersion: apps/v1
 kind: Deployment
 metadata:
-  creationTimestamp: null
-  labels:
-    app: catalog-deployment
   name: catalog-deployment
 spec:
   selector:
@@ -15,29 +12,30 @@ spec:
         app: catalog-web-api
     spec:
       containers:
-      - image: victordacamino/catalog:v1
-        name: catalog
-        resources:
-          limits: 
-            memory: "128Mi"
-            cpu: "500m"
-        ports:
-          - containerPort: 80
-        env:
-          - name: MongoDBSettings__Host
-            value: mongodb-service
-          - name: MongoDBSettings__Pwd
-            secreteKeyRef:
-              name: catalog-secrets
-              key: mongodb-password
-        livenessProbe:
-          httpGet:
-            path: /health/live
-            port: 80
-        readinessProbe:
-          httpGet:
-            path: /health/ready
-            port: 80
+        - name: catalog-web-api
+          image: victordacamino/catalog:v1
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 80
+          env:
+            - name: MongoDbSettings__Host
+              value: mongodb-service
+            - name: MongodbSettings__Pwd
+              valueFrom:
+                secretKeyRef:
+                  name: catalog-secrets
+                  key: mongodb-password
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: 80
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: 80
 
 ---
 apiVersion: v1
